@@ -17,6 +17,7 @@ type Lang = "EN" | "SI" | "TA";
 const TRANSLATIONS = {
     EN: {
         usingLiveLocation: "Using your live location",
+        locationFound: "You are currently in:",
         locationDenied: "Location denied",
         geoNotSupported: "Geolocation not supported",
         failedToLoad: "Failed to load gas stations",
@@ -32,6 +33,7 @@ const TRANSLATIONS = {
     },
     SI: {
         usingLiveLocation: "ඔබේ සජීවී ස්ථානය භාවිත කරමින්",
+        locationFound: "ඔබ දැනට සිටින්නේ:",
         locationDenied: "ස්ථානය ලබාගත නොහැක",
         geoNotSupported: "ස්ථානය සොයාගැනීමට සහය නොදක්වයි",
         failedToLoad: "දත්ත ලබාගැනීමේ දෝෂයක්",
@@ -47,6 +49,7 @@ const TRANSLATIONS = {
     },
     TA: {
         usingLiveLocation: "உங்கள் நேரடி இருப்பிடத்தைப் பயன்படுத்துகிறது",
+        locationFound: "நீங்கள் தற்போது உள்ள இடம்:",
         locationDenied: "இருப்பிடம் மறுக்கப்பட்டது",
         geoNotSupported: "புவி இருப்பிடம் ஆதரிக்கப்படவில்லை",
         failedToLoad: "தரவை ஏற்றுவதில் பிழை",
@@ -86,7 +89,8 @@ export default function CustomerMap() {
 
     // Derived state for the current translation
     const t = TRANSLATIONS[lang];
-    const [locationStatus, setLocationStatus] = useState(t.usingLiveLocation); // Initialize with something, updated in effect
+    const [locationStatus, setLocationStatus] = useState(t.usingLiveLocation);
+    const [locationName, setLocationName] = useState("");
 
     useEffect(() => {
         document.documentElement.setAttribute("data-theme", theme);
@@ -95,11 +99,28 @@ export default function CustomerMap() {
     useEffect(() => {
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    setUserLat(position.coords.latitude);
-                    setUserLng(position.coords.longitude);
-                    setLocationStatus(TRANSLATIONS[lang].usingLiveLocation);
+                async (position) => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    setUserLat(lat);
+                    setUserLng(lng);
                     setHasLocation(true);
+                    setLocationStatus(TRANSLATIONS[lang].usingLiveLocation);
+
+                    try {
+                        // OpenStreetMap Nominatim reverse geocoding
+                        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=14&addressdetails=1`);
+                        const data = await res.json();
+                        if (data && data.address) {
+                            const name = data.address.city || data.address.town || data.address.village || data.address.suburb || data.name;
+                            if (name) {
+                                setLocationStatus(TRANSLATIONS[lang].locationFound);
+                                setLocationName(name);
+                            }
+                        }
+                    } catch (e) {
+                        console.error("Reverse geocoding failed", e);
+                    }
                 },
                 (error) => {
                     setLocationStatus(TRANSLATIONS[lang].locationDenied);
@@ -173,7 +194,7 @@ export default function CustomerMap() {
                         <h1 className="text-gradient" style={{ fontSize: "2.5rem" }}>{t.liveGasAvailability}</h1>
                         <p style={{ color: hasLocation ? "#34d399" : "#cbd5e1", display: "flex", alignItems: "center", gap: "8px" }}>
                             <Crosshair size={16} />
-                            {locationStatus}
+                            {locationStatus} {locationName && <span style={{ fontWeight: "bold", background: "rgba(52, 211, 153, 0.2)", padding: "2px 8px", borderRadius: "8px" }}>{locationName}</span>}
                         </p>
                     </div>
 
