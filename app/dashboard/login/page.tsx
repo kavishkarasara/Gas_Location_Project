@@ -70,7 +70,7 @@ export default function DealerLogin() {
                         <Lock size={20} style={{ position: "absolute", left: "15px", top: "50%", transform: "translateY(-50%)", color: "#9ca3af" }} />
                         <input
                             type="password"
-                            placeholder="Password (admin / 1234)"
+                            placeholder="Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
