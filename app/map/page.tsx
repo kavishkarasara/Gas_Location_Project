@@ -255,15 +255,13 @@ export default function CustomerMap() {
                                 <div style={{ fontSize: "0.75rem", color: "#64748b" }}>
                                     {t.updated} {station.updatedAt ? new Date(station.updatedAt).toLocaleTimeString() : "N/A"}
                                 </div>
-                                <a
-                                    href={`https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${station.lat},${station.lng}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
+                                <Link
+                                    href={`/map/${station.id}?ulat=${userLat}&ulng=${userLng}`}
                                     className="btn btn-primary"
                                     style={{ padding: "6px 14px", fontSize: "0.85rem", gap: "6px", display: "inline-flex", alignItems: "center" }}
                                 >
-                                    <Navigation size={14} /> {t.getDirections}
-                                </a>
+                                    <MapPin size={14} /> View Map & Info
+                                </Link>
                             </div>
                         </div>
                     ))}
