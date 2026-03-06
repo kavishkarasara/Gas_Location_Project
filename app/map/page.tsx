@@ -253,7 +253,7 @@ export default function CustomerMap() {
 
                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "auto", paddingTop: "20px", borderTop: "1px solid var(--card-border)" }}>
                                 <div style={{ fontSize: "0.75rem", color: "#64748b" }}>
-                                    {t.updated} {new Date(station.updatedAt).toLocaleTimeString()}
+                                    {t.updated} {station.updatedAt ? new Date(station.updatedAt).toLocaleTimeString() : "N/A"}
                                 </div>
                                 <a
                                     href={`https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${station.lat},${station.lng}`}

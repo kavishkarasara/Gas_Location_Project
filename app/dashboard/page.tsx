@@ -168,7 +168,7 @@ export default function Dashboard() {
                 </div>
 
                 <div style={{ marginTop: "30px", fontSize: "0.85rem", color: "#64748b", textAlign: "right" }}>
-                    Last updated: {new Date(myStation.updatedAt).toLocaleTimeString()}
+                    Last updated: {myStation.updatedAt ? new Date(myStation.updatedAt).toLocaleTimeString() : "N/A"}
                 </div>
             </div>
 
