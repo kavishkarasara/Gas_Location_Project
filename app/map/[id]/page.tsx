@@ -6,7 +6,6 @@ import useSWR from "swr";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, Navigation, MapPin, CheckCircle2, XCircle, Clock } from "lucide-react";
-import AdBanner from "@/components/AdBanner";
 import type { GasStation } from "@/lib/db";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -97,11 +96,6 @@ export default function StationDetails() {
                         </div>
                     </div>
                 </div>
-            </div>
-
-            {/* AdSense Placement: Between Station Summary and Live Map */}
-            <div style={{ marginBottom: "30px" }}>
-                <AdBanner dataAdSlot="0000000000" dataAdFormat="horizontal" />
             </div>
 
             <div className="glass-panel animate-fade-in" style={{ padding: "30px", display: "flex", flexDirection: "column", gap: "20px" }}>
