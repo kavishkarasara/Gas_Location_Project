@@ -41,8 +41,13 @@ export default function DealerLogin() {
 
     return (
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh", padding: "20px" }}>
-            <div className="glass-panel animate-fade-in" style={{ width: "100%", maxWidth: "400px", padding: "40px 30px" }}>
-                <h2 className="text-gradient" style={{ textAlign: "center", marginBottom: "30px" }}>Dealer Login</h2>
+            <div className="glass-panel animate-fade-in" style={{ width: "100%", maxWidth: "400px", padding: "40px 30px", position: "relative" }}>
+
+                <a href="/" style={{ position: "absolute", top: "20px", left: "20px", color: "#9ca3af", display: "flex", alignItems: "center", gap: "5px", fontSize: "0.85rem", textDecoration: "none" }}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back
+                </a>
+
+                <h2 className="text-gradient" style={{ textAlign: "center", marginBottom: "30px", marginTop: "10px" }}>Dealer Login</h2>
 
                 {error && (
                     <div className="badge badge-danger" style={{ display: "flex", marginBottom: "20px", width: "100%", justifyContent: "center" }}>

@@ -171,6 +171,25 @@ export default function Dashboard() {
                     Last updated: {new Date(myStation.updatedAt).toLocaleTimeString()}
                 </div>
             </div>
+
+            {/* Simulated Live Customer Insight section */}
+            <div className="glass-panel animate-fade-in" style={{ padding: "30px", marginTop: "20px" }}>
+                <h2 style={{ marginBottom: "20px", display: "flex", alignItems: "center", gap: "10px", fontSize: "1.2rem", color: "#34d399" }}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    Live Customers Nearby
+                </h2>
+                <div style={{ background: "rgba(0,0,0,0.2)", padding: "15px", borderRadius: "12px", border: "1px solid var(--card-border)" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", paddingBottom: "10px", borderBottom: "1px solid rgba(255,255,255,0.05)", marginBottom: "10px" }}>
+                        <span style={{ color: "#cbd5e1" }}>Customers looking for gas near {myStation.location}:</span>
+                        <span style={{ color: "#34d399", fontWeight: "bold" }}>{Math.floor(Math.random() * 50) + 12} Active</span>
+                    </div>
+                    <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "10px", color: "#9ca3af", fontSize: "0.9rem" }}>
+                        <li style={{ display: "flex", alignItems: "center", gap: "8px" }}><span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#3b82f6", display: "inline-block" }}></span> Customer 2.1km away is searching for Litro 12.5kg</li>
+                        <li style={{ display: "flex", alignItems: "center", gap: "8px" }}><span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#fbbf24", display: "inline-block" }}></span> Customer 4.3km away is searching for Laugfs 5kg</li>
+                        <li style={{ display: "flex", alignItems: "center", gap: "8px" }}><span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#3b82f6", display: "inline-block" }}></span> Customer 0.8km away is viewing your profile</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     );
 }
