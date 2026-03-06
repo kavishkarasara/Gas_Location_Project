@@ -82,7 +82,7 @@ export default function CustomerMap() {
     const [hasLocation, setHasLocation] = useState(false);
 
     const [theme, setTheme] = useState("dark");
-    const [lang, setLang] = useState<Lang>("SI");
+    const [lang, setLang] = useState<Lang>("EN");
 
     // Derived state for the current translation
     const t = TRANSLATIONS[lang];

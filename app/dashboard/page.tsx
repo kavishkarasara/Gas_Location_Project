@@ -22,7 +22,7 @@ export default function Dashboard() {
     }, [router]);
 
     const { data, mutate } = useSWR<{ success: boolean; data: GasStation[] }>("/api/gas-stations", fetcher, {
-        refreshInterval: 0 // Sellers don't need real-time others, but they do fetch once
+        revalidateOnFocus: false, // Prevent auto-revalidation knocking out auth or states
     });
 
     const handleLogout = () => {
