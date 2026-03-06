@@ -5,6 +5,7 @@ import useSWR from "swr";
 import Link from "next/link";
 import Image from "next/image";
 import { Navigation, MapPin, Search, CheckCircle2, XCircle, ArrowLeft, Crosshair, Sun, Moon, Globe } from "lucide-react";
+import AdBanner from "@/components/AdBanner";
 import type { GasStation } from "@/lib/db";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -214,6 +215,11 @@ export default function CustomerMap() {
                     </div>
                 </div>
             </header>
+
+            {/* AdSense Placement: Top Banner */}
+            <div style={{ marginBottom: "30px" }}>
+                <AdBanner dataAdSlot="0000000000" dataAdFormat="horizontal" />
+            </div>
 
             {isLoading ? (
                 <div style={{ textAlign: "center", padding: "50px", color: "#9ca3af" }}>{t.scanningStations}</div>
