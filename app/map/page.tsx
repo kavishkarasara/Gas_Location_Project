@@ -12,6 +12,56 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 const FALLBACK_LAT = 6.8850;
 const FALLBACK_LNG = 79.8655;
 
+type Lang = "EN" | "SI" | "TA";
+
+const TRANSLATIONS = {
+    EN: {
+        usingLiveLocation: "Using your live location",
+        locationDenied: "Location denied",
+        geoNotSupported: "Geolocation not supported",
+        failedToLoad: "Failed to load gas stations",
+        backToHome: "Back to Home",
+        liveGasAvailability: "Live Gas Availability",
+        searchLocations: "Search locations...",
+        scanningStations: "Scanning for stations...",
+        kmAway: "km away",
+        updated: "Updated: ",
+        getDirections: "Get Directions",
+        noStations: "No stations found matching your search",
+        languageName: "English"
+    },
+    SI: {
+        usingLiveLocation: "ඔබේ සජීවී ස්ථානය භාවිත කරමින්",
+        locationDenied: "ස්ථානය ලබාගත නොහැක",
+        geoNotSupported: "ස්ථානය සොයාගැනීමට සහය නොදක්වයි",
+        failedToLoad: "දත්ත ලබාගැනීමේ දෝෂයක්",
+        backToHome: "මුල් පිටුවට",
+        liveGasAvailability: "සජීවී ගෑස් තොරතුරු",
+        searchLocations: "ස්ථාන සොයන්න...",
+        scanningStations: "දත්ත යාවත්කාලීන වෙමින් පවතී...",
+        kmAway: "කි.මී දුරින්",
+        updated: "යාවත්කාලීන කළේ: ",
+        getDirections: "මග පෙන්වීම්",
+        noStations: "ඔබේ සෙවීම සඳහා ස්ථාන හමු නොවීය",
+        languageName: "සිංහල"
+    },
+    TA: {
+        usingLiveLocation: "உங்கள் நேரடி இருப்பிடத்தைப் பயன்படுத்துகிறது",
+        locationDenied: "இருப்பிடம் மறுக்கப்பட்டது",
+        geoNotSupported: "புவி இருப்பிடம் ஆதரிக்கப்படவில்லை",
+        failedToLoad: "தரவை ஏற்றுவதில் பிழை",
+        backToHome: "முகப்புக்குத் திரும்பு",
+        liveGasAvailability: "தற்போதைய எரிவாயு இருப்பு",
+        searchLocations: "இடங்களைத் தேடுக...",
+        scanningStations: "நிலையங்களை தேடுகிறது...",
+        kmAway: "கி.மீ தூரத்தில்",
+        updated: "புதுப்பிக்கப்பட்டது: ",
+        getDirections: "வழிகள்",
+        noStations: "நிலையங்கள் கண்டறியப்படவில்லை",
+        languageName: "தமிழ்"
+    }
+};
+
 function getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon2: number) {
     const R = 6371;
     const dLat = (lat2 - lat1) * (Math.PI / 180);
@@ -29,12 +79,14 @@ export default function CustomerMap() {
     const [search, setSearch] = useState("");
     const [userLat, setUserLat] = useState(FALLBACK_LAT);
     const [userLng, setUserLng] = useState(FALLBACK_LNG);
-    const [locationStatus, setLocationStatus] = useState("Detecting location...");
     const [hasLocation, setHasLocation] = useState(false);
 
-    // UI states
     const [theme, setTheme] = useState("dark");
-    const [lang, setLang] = useState<"EN" | "SI">("SI");
+    const [lang, setLang] = useState<Lang>("SI");
+
+    // Derived state for the current translation
+    const t = TRANSLATIONS[lang];
+    const [locationStatus, setLocationStatus] = useState(t.usingLiveLocation); // Initialize with something, updated in effect
 
     useEffect(() => {
         document.documentElement.setAttribute("data-theme", theme);
@@ -46,16 +98,16 @@ export default function CustomerMap() {
                 (position) => {
                     setUserLat(position.coords.latitude);
                     setUserLng(position.coords.longitude);
-                    setLocationStatus(lang === "SI" ? "ඔබේ ස්ථානය භාවිත කරමින්" : "Using your live location");
+                    setLocationStatus(TRANSLATIONS[lang].usingLiveLocation);
                     setHasLocation(true);
                 },
                 (error) => {
-                    setLocationStatus(lang === "SI" ? "ස්ථානය ලබාගත නොහැක" : "Location denied. Showing default region.");
+                    setLocationStatus(TRANSLATIONS[lang].locationDenied);
                     setHasLocation(false);
                 }
             );
         } else {
-            setLocationStatus(lang === "SI" ? "ස්ථානය සොයාගැනීමට සහය නොදක්වයි" : "Geolocation not supported.");
+            setLocationStatus(TRANSLATIONS[lang].geoNotSupported);
         }
     }, [lang]);
 
@@ -65,7 +117,13 @@ export default function CustomerMap() {
         { refreshInterval: 2000 }
     );
 
-    if (error) return <div style={{ padding: "40px", textAlign: "center" }}>{lang === "SI" ? "දත්ත ලබාගැනීමේ දෝෂයක්!" : "Failed to load gas stations."}</div>;
+    const cycleLanguage = () => {
+        if (lang === "EN") setLang("SI");
+        else if (lang === "SI") setLang("TA");
+        else setLang("EN");
+    };
+
+    if (error) return <div style={{ padding: "40px", textAlign: "center" }}>{t.failedToLoad}</div>;
 
     let stations = data?.data || [];
 
@@ -97,14 +155,14 @@ export default function CustomerMap() {
             <header style={{ marginBottom: "30px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
                     <Link href="/" style={{ display: "inline-flex", alignItems: "center", gap: "8px", color: "#9ca3af" }}>
-                        <ArrowLeft size={16} /> {lang === "SI" ? "මුල් පිටුවට" : "Back to Home"}
+                        <ArrowLeft size={16} /> {t.backToHome}
                     </Link>
 
                     <div style={{ display: "flex", gap: "10px" }}>
-                        <button onClick={() => setLang(lang === "EN" ? "SI" : "EN")} className="btn btn-secondary" style={{ padding: "6px 12px", background: "transparent" }}>
-                            <Globe size={18} style={{ marginRight: "5px" }} /> {lang === "EN" ? "සිංහල" : "English"}
+                        <button onClick={cycleLanguage} className="btn btn-secondary" style={{ padding: "6px 12px", background: "var(--card-bg)" }}>
+                            <Globe size={18} style={{ marginRight: "5px" }} /> {t.languageName}
                         </button>
-                        <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")} className="btn btn-secondary" style={{ padding: "6px 12px", background: "transparent" }}>
+                        <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")} className="btn btn-secondary" style={{ padding: "6px 12px", background: "var(--card-bg)" }}>
                             {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
                         </button>
                     </div>
@@ -112,7 +170,7 @@ export default function CustomerMap() {
 
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "20px" }}>
                     <div>
-                        <h1 className="text-gradient" style={{ fontSize: "2.5rem" }}>{lang === "SI" ? "Live ගෑස් Availability" : "Live Gas Availability"}</h1>
+                        <h1 className="text-gradient" style={{ fontSize: "2.5rem" }}>{t.liveGasAvailability}</h1>
                         <p style={{ color: hasLocation ? "#34d399" : "#cbd5e1", display: "flex", alignItems: "center", gap: "8px" }}>
                             <Crosshair size={16} />
                             {locationStatus}
@@ -123,7 +181,7 @@ export default function CustomerMap() {
                         <Search size={20} style={{ position: "absolute", left: "15px", top: "50%", transform: "translateY(-50%)", color: "#9ca3af" }} />
                         <input
                             type="text"
-                            placeholder={lang === "SI" ? "ස්ථාන සොයන්න..." : "Search locations..."}
+                            placeholder={t.searchLocations}
                             value={search}
                             onChange={e => setSearch(e.target.value)}
                             className="glass-panel"
@@ -137,7 +195,7 @@ export default function CustomerMap() {
             </header>
 
             {isLoading ? (
-                <div style={{ textAlign: "center", padding: "50px", color: "#9ca3af" }}>{lang === "SI" ? "දත්ත යාවත්කාලීන වෙමින් පවතී..." : "Scanning for stations..."}</div>
+                <div style={{ textAlign: "center", padding: "50px", color: "#9ca3af" }}>{t.scanningStations}</div>
             ) : (
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "25px" }}>
                     {stations.map(station => (
@@ -147,7 +205,7 @@ export default function CustomerMap() {
                                 <p style={{ color: "#9ca3af", display: "flex", alignItems: "center", gap: "5px", fontSize: "0.9rem" }}>
                                     <MapPin size={14} /> {station.location}
                                     <span style={{ marginLeft: "auto", background: "rgba(100,100,100,0.1)", padding: "2px 8px", borderRadius: "10px", fontSize: "0.8rem", color: "#60a5fa" }}>
-                                        {getDistanceFromLatLonInKm(userLat, userLng, station.lat, station.lng)} {lang === "SI" ? "කි.මී දුරින්" : "km away"}
+                                        {getDistanceFromLatLonInKm(userLat, userLng, station.lat, station.lng)} {t.kmAway}
                                     </span>
                                 </p>
                             </div>
@@ -174,7 +232,7 @@ export default function CustomerMap() {
 
                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "auto", paddingTop: "20px", borderTop: "1px solid var(--card-border)" }}>
                                 <div style={{ fontSize: "0.75rem", color: "#64748b" }}>
-                                    {lang === "SI" ? "අවසන් යාවත්කාලීන කිරීම: " : "Updated: "} {new Date(station.updatedAt).toLocaleTimeString()}
+                                    {t.updated} {new Date(station.updatedAt).toLocaleTimeString()}
                                 </div>
                                 <a
                                     href={`https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${station.lat},${station.lng}`}
@@ -183,7 +241,7 @@ export default function CustomerMap() {
                                     className="btn btn-primary"
                                     style={{ padding: "6px 14px", fontSize: "0.85rem", gap: "6px", display: "inline-flex", alignItems: "center" }}
                                 >
-                                    <Navigation size={14} /> {lang === "SI" ? "මග පෙන්වීම්" : "Get Directions"}
+                                    <Navigation size={14} /> {t.getDirections}
                                 </a>
                             </div>
                         </div>
@@ -193,7 +251,7 @@ export default function CustomerMap() {
 
             {stations.length === 0 && !isLoading && (
                 <div style={{ textAlign: "center", padding: "50px", color: "#9ca3af", background: "var(--card-bg)", borderRadius: "16px" }}>
-                    {lang === "SI" ? "ඔබේ සෙවීම සඳහා ස්ථාන හමු නොවීය." : "No stations found matching your search."}
+                    {t.noStations}
                 </div>
             )}
         </div>

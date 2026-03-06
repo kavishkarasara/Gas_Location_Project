@@ -39,6 +39,16 @@
   color: var(--foreground) !important;
 }
 
+:root[data-theme='light'] .btn-secondary {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--foreground);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+:root[data-theme='light'] .btn-secondary:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
