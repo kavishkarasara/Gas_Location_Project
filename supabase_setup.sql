@@ -22,6 +22,7 @@ CREATE TABLE gas_stations (
   litro5kg BOOLEAN DEFAULT false,
   laugfs12_5kg BOOLEAN DEFAULT false,
   laugfs5kg BOOLEAN DEFAULT false,
+  phone TEXT,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 

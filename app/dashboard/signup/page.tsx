@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Store, MapPin, User, Lock, Crosshair } from "lucide-react";
+import { Store, MapPin, User, Lock, Crosshair, Phone } from "lucide-react";
 
 export default function DealerSignup() {
     const router = useRouter();
@@ -12,6 +12,7 @@ export default function DealerSignup() {
         password: "",
         shopName: "",
         location: "",
+        phone: "",
         lat: "",
         lng: ""
     });
@@ -136,6 +137,21 @@ export default function DealerSignup() {
                             placeholder="Address / Area Description"
                             value={formData.location}
                             onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                            required
+                            style={{
+                                width: "100%", padding: "12px 12px 12px 45px", borderRadius: "8px",
+                                border: "1px solid var(--card-border)", background: "rgba(0,0,0,0.2)", color: "white", outline: "none"
+                            }}
+                        />
+                    </div>
+
+                    <div style={{ position: "relative" }}>
+                        <Phone size={20} style={{ position: "absolute", left: "15px", top: "50%", transform: "translateY(-50%)", color: "#9ca3af" }} />
+                        <input
+                            type="tel"
+                            placeholder="Phone Number (e.g. 0771234567)"
+                            value={formData.phone}
+                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                             required
                             style={{
                                 width: "100%", padding: "12px 12px 12px 45px", borderRadius: "8px",

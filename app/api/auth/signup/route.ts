@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabase';
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { username, password, shopName, location, lat, lng } = body;
+        const { username, password, shopName, location, lat, lng, phone } = body;
 
         if (!username || !password || !shopName || !lat || !lng) {
             return NextResponse.json({ success: false, error: 'All fields are required' }, { status: 400 });
@@ -40,7 +40,8 @@ export async function POST(req: Request) {
                 name: shopName,
                 location: location || "Custom Location",
                 lat: parseFloat(lat),
-                lng: parseFloat(lng)
+                lng: parseFloat(lng),
+                phone: phone || null
             }])
             .select()
             .single();

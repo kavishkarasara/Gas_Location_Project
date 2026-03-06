@@ -9,6 +9,7 @@ export type GasStation = {
     litro5kg: boolean;
     laugfs12_5kg: boolean;
     laugfs5kg: boolean;
+    phone?: string;
     updatedAt: string;
 };
 

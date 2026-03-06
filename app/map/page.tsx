@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import useSWR from "swr";
 import Link from "next/link";
 import Image from "next/image";
-import { Navigation, MapPin, Search, CheckCircle2, XCircle, ArrowLeft, Crosshair, Sun, Moon, Globe } from "lucide-react";
+import { Navigation, MapPin, Search, CheckCircle2, XCircle, ArrowLeft, Crosshair, Sun, Moon, Globe, Phone } from "lucide-react";
 import type { GasStation } from "@/lib/db";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -28,6 +28,7 @@ const TRANSLATIONS = {
         kmAway: "km away",
         updated: "Updated: ",
         getDirections: "Get Directions",
+        callNow: "Call Now",
         noStations: "No stations found matching your search",
         languageName: "English"
     },
@@ -44,6 +45,7 @@ const TRANSLATIONS = {
         kmAway: "කි.මී දුරින්",
         updated: "යාවත්කාලීන කළේ: ",
         getDirections: "මග පෙන්වීම්",
+        callNow: "ඇමතුමක් ගන්න",
         noStations: "ඔබේ සෙවීම සඳහා ස්ථාන හමු නොවීය",
         languageName: "සිංහල"
     },
@@ -60,6 +62,7 @@ const TRANSLATIONS = {
         kmAway: "கி.மீ தூரத்தில்",
         updated: "புதுப்பிக்கப்பட்டது: ",
         getDirections: "வழிகள்",
+        callNow: "அழைப்பு",
         noStations: "நிலையங்கள் கண்டறியப்படவில்லை",
         languageName: "தமிழ்"
     }
@@ -229,6 +232,11 @@ export default function CustomerMap() {
                                         {getDistanceFromLatLonInKm(userLat, userLng, station.lat, station.lng)} {t.kmAway}
                                     </span>
                                 </p>
+                                {station.phone && (
+                                    <a href={`tel:${station.phone}`} style={{ color: "#34d399", fontSize: "0.9rem", display: "flex", alignItems: "center", gap: "5px", textDecoration: "none" }}>
+                                        <Phone size={14} /> {station.phone}
+                                    </a>
+                                )}
                             </div>
 
                             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "15px", marginTop: "10px" }}>

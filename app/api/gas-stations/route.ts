@@ -21,6 +21,7 @@ export async function GET() {
             litro5kg: station.litro5kg,
             laugfs12_5kg: station.laugfs12_5kg,
             laugfs5kg: station.laugfs5kg,
+            phone: station.phone,
             updatedAt: station.updated_at
         }));
 

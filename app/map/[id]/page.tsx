@@ -5,7 +5,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import useSWR from "swr";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft, Navigation, MapPin, CheckCircle2, XCircle, Clock } from "lucide-react";
+import { ArrowLeft, Navigation, MapPin, CheckCircle2, XCircle, Clock, Phone } from "lucide-react";
 import type { GasStation } from "@/lib/db";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -61,9 +61,14 @@ export default function StationDetails() {
 
             <div className="glass-panel animate-fade-in" style={{ padding: "30px", marginBottom: "30px" }}>
                 <h1 className="text-gradient" style={{ fontSize: "2.5rem", marginBottom: "10px" }}>{station.name}</h1>
-                <p style={{ color: "#9ca3af", display: "flex", alignItems: "center", gap: "8px", fontSize: "1.1rem", marginBottom: "20px" }}>
+                <p style={{ color: "#9ca3af", display: "flex", alignItems: "center", gap: "8px", fontSize: "1.1rem", marginBottom: "10px" }}>
                     <MapPin size={18} /> {station.location}
                 </p>
+                {station.phone && (
+                    <a href={`tel:${station.phone}`} style={{ color: "#34d399", display: "flex", alignItems: "center", gap: "8px", fontSize: "1.1rem", marginBottom: "20px", textDecoration: "none" }}>
+                        <Phone size={18} /> {station.phone}
+                    </a>
+                )}
 
                 <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#64748b", fontSize: "0.9rem", marginBottom: "30px" }}>
                     <Clock size={16} /> Last updated: {station.updatedAt ? new Date(station.updatedAt).toLocaleTimeString() : "N/A"}
